@@ -24,8 +24,26 @@ def hex_to_rgb(hex_color):
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
 def color_distance(color1, color2):
-    """Calculate Euclidean distance between two RGB colors."""
-    return math.sqrt(sum((a-b)**2 for a, b in zip(color1, color2)))
+    """
+    Calculate advanced color distance using weighted Euclidean distance.
+    Gives more weight to luminance and color differences.
+    """
+    # Weights for RGB components
+    # Adjusted to be more sensitive to luminance and color nuances
+    weights = (0.299, 0.587, 0.114)  # Standard luminance weights
+    
+    # Squared differences with weights
+    weighted_sq_diff = [
+        weights[i] * ((color1[i] - color2[i]) ** 2)
+        for i in range(3)
+    ]
+    
+    return math.sqrt(sum(weighted_sq_diff))
+
+def calculate_luminance(rgb):
+    """Calculate relative luminance of a color."""
+    # Standard luminance calculation
+    return 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]
 
 def find_closest_color(input_hex):
     """Find the closest predefined color to the input hex color."""
@@ -33,13 +51,19 @@ def find_closest_color(input_hex):
         # Convert input hex to RGB
         input_rgb = hex_to_rgb(input_hex)
         
-        # Find the closest color
-        closest_color = min(
-            COLOR_MAP.items(), 
-            key=lambda x: color_distance(hex_to_rgb(x[1]), input_rgb)
-        )[0]
+        # Calculate input luminance
+        input_luminance = calculate_luminance(input_rgb)
         
-        return closest_color
+        # Find the closest color
+        closest_color_item = min(
+            COLOR_MAP.items(), 
+            key=lambda x: (
+                color_distance(hex_to_rgb(x[1]), input_rgb),
+                abs(calculate_luminance(hex_to_rgb(x[1])) - input_luminance)
+            )
+        )[0]
+
+        return closest_color_item
     except Exception as e:
         return "Invalid hex color"
 
