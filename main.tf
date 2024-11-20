@@ -38,7 +38,7 @@ resource "aws_lambda_function" "color_categorizer" {
   filename          = "lambda_function.zip" # Path to your zip package
   source_code_hash  = filebase64sha256("lambda_function.zip")
   role              = aws_iam_role.lambda_execution_role.arn
-  handler           = "lambda_function.handler"
+  handler           = "index.py"
   runtime           = "python3.8"
   memory_size       = 128
   timeout           = 10
@@ -83,17 +83,23 @@ resource "aws_lambda_permission" "allow_api_gateway" {
   statement_id  = "AllowAPIGatewayInvoke"
 }
 
-# Deploy the API Gateway
+# Deploy the API Gateway (Only deploy when needed)
 resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.color_api.id
-  triggers = {
-    redeployment = timestamp() # Forces new deployment when needed
+
+  # This will prevent unnecessary redeployments unless you explicitly modify something
+  lifecycle {
+    ignore_changes = [
+      triggers,
+    ]
   }
 
-  depends_on = [aws_api_gateway_integration.color_integration]
+  depends_on = [
+    aws_api_gateway_integration.color_integration
+  ]
 }
 
-# Create a Stage for the Deployment
+# Create a Stage for the Deployment (Only one stage)
 resource "aws_api_gateway_stage" "prod_stage" {
   stage_name    = "prod"
   rest_api_id   = aws_api_gateway_rest_api.color_api.id
@@ -103,6 +109,6 @@ resource "aws_api_gateway_stage" "prod_stage" {
 
 # Output the API Gateway URL
 output "api_gateway_url" {
-  value = "https://${aws_api_gateway_rest_api.color_api.id}.execute-api.${var.region}.amazonaws.com/prod"
+  value       = "https://${aws_api_gateway_rest_api.color_api.id}.execute-api.${var.region}.amazonaws.com/prod"
   description = "The URL for the deployed API Gateway"
 }
