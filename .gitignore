@@ -1,9 +1,0 @@
-*.zip
-lambda_function.zip
-*.terraform
-.venv
-*.terraform.*
-terraform.tfstate
-terraform.tfstate.backup
-lambda_package/*
-
