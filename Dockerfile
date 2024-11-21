@@ -1,5 +1,5 @@
-# Use the official Python image as a base image
-FROM python:3.10-slim
+# Use the official Python image as a base image for linux/amd64
+FROM --platform=linux/amd64 python:3.10-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,4 +17,5 @@ COPY app /app
 EXPOSE 8000
 
 # Set the command to run the FastAPI application
-CMD ["uvicorn", "app.app:app", "--host", "0.0.0.0", "--port", "8000"]
+# ✅ Do this
+CMD ["fastapi", "run", "app.py", "--port", "8000"]
