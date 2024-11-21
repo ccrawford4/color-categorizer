@@ -6,7 +6,6 @@ from sklearn.preprocessing import LabelEncoder
 from fastapi.responses import PlainTextResponse
 
 # Load dataset and preprocess
-# For simplicity, we will assume it's bundled with the Lambda deployment package.
 data = pd.read_csv("colors.csv")  # Ensure your CSV file is available
 X = data[["red", "green", "blue"]]
 y = data["label"]
@@ -15,10 +14,10 @@ y = data["label"]
 label_encoder = LabelEncoder()
 y_encoded = label_encoder.fit_transform(y)
 
-# Train/Test Split (though this is a Lambda function, this part is done once during deployment)
+# Train/Test Split
 X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
 
-# Train a model (this might be done at deploy time and saved as a pickle or joblib file in Lambda Layer or S3)
+# Train a model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
