@@ -1,4 +1,4 @@
-# Categorize a Hex Color Using RandomForest Hosted on Azure Container Apps
+# Categorizes a Hex Color Using RandomForest Hosted on Azure Container Apps
 
 ### Usage:
 <p>
