@@ -2,9 +2,9 @@
 
 ### Usage:
 <p>
-https://colorapp.livelydune-ad0f5c07.westus.azurecontainerapps.io/(Hex color)
+https://colorapp2.livelydune-ad0f5c07.westus.azurecontainerapps.io/(Hex color)
 </p>
 <p>
 Example:
-https://colorapp.livelydune-ad0f5c07.westus.azurecontainerapps.io/FFFFFF
+https://colorapp2.livelydune-ad0f5c07.westus.azurecontainerapps.io/FFFFFF
 </p>
